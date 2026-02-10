@@ -5,7 +5,8 @@
 
 (defvar yo/config-basenames
   '("org"
-    "faces")
+    "faces"
+    "vc")
   "Basenames of my configuration files, without `-init' suffix.
 Order matters.")
 

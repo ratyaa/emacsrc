@@ -24,7 +24,7 @@
 (defun yo/bootstrap-config-lib ()
   "Bootstrap configuration management library."
   (interactive)
-  (let* ((src (concat yo/emacsdir "lib/config.el"))
+  (let* ((src (concat yo/emacsdir "config.el"))
          (lib (concat src yo/compile-suffix)))
     (unless (file-exists-p src)
       (user-error "Configuration management library wasn't found"))

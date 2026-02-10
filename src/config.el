@@ -4,7 +4,7 @@
   "Compile configuration files."
   (interactive)
     (dolist (basename yo/config-basenames)
-      (let* ((src (concat yo/emacsdir basename "-init.el"))
+      (let* ((src (concat yo/emacsdir basename ".el"))
              (lib (concat src yo/compile-suffix))
              (src-t (file-attribute-modification-time
                      (file-attributes (file-chase-links src))))
@@ -21,5 +21,5 @@
   "Load configuration files."
   (interactive)
   (dolist (basename yo/config-basenames)
-    (let ((lib (concat yo/emacsdir basename "-init.el" yo/compile-suffix)))
+    (let ((lib (concat yo/emacsdir basename ".el" yo/compile-suffix)))
       (apply yo/load-function (list lib)))))

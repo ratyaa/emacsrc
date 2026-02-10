@@ -9,7 +9,7 @@
   "Basenames of my configuration files, without `-init' suffix.
 Order matters.")
 
-(load (concat user-emacs-directory "bootstrap-init"))
+(load (concat user-emacs-directory "bootstrap"))
 
 (declare-function yo/bootstrap-config-lib nil)
 (declare-function yo/load-config nil)

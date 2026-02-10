@@ -13,17 +13,18 @@
   (expand-file-name user-emacs-directory)
   "Emacs directory absolute path.")
 
+;; redefine things to work with emacs w/o native compilation
 (unless (native-comp-available-p)
-  (setq yo/compile-function #'(lambda (src target)
+  (setq yo/load-function #'load-file
+        yo/compile-suffix "c"
+        yo/compile-function #'(lambda (src target)
                                 (byte-compile-file src)
-                                (ignore target))
-        yo/load-function #'load-file
-        yo/compile-suffix "c"))
+                                (ignore target))))
 
 (defun yo/bootstrap-config-lib ()
   "Bootstrap configuration management library."
   (interactive)
-  (let* ((src (concat yo/emacsdir "config-init.el"))
+  (let* ((src (concat yo/emacsdir "lib/config.el"))
          (lib (concat src yo/compile-suffix)))
     (unless (file-exists-p src)
       (user-error "Configuration management library wasn't found"))

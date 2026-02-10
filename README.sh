@@ -1,3 +1,3 @@
 #! /usr/bin/env sh
 
-stow . -t ~/.config/emacs
+stow src -t ~/.config/emacs

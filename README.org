@@ -1,4 +1,4 @@
-#+begin_src sh
-  $ nix-shell -p stow
-  $ stow . -t ~/.config/emacs
+#+begin_src 
+  nix-shell -p stow
+  stow . -t ~/.config/emacs
 #+end_src

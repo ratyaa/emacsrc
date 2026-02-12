@@ -1,11 +1,13 @@
 ;; -*- lexical-binding: t; -*-
 
-(defun yo/compile-config ()
+(defun rc/compile-config ()
   "Compile configuration files."
   (interactive)
-    (dolist (basename yo/config-basenames)
-      (let* ((src (concat yo/emacsdir basename ".el"))
-             (lib (concat src yo/compile-suffix))
+  (let ((basenames (append rc/early-config-basenames
+                           rc/config-basenames)))
+    (dolist (basename basenames)
+      (let* ((src (concat rc/emacsdir basename ".el"))
+             (lib (concat src rc/compile-suffix))
              (src-t (file-attribute-modification-time
                      (file-attributes (file-chase-links src))))
              (lib-t (file-attribute-modification-time
@@ -14,12 +16,12 @@
           (user-error "Configuration file `%s' wasn't found" basename))
         (unless (and (file-exists-p lib)
                      (time-less-p src-t lib-t))
-          (apply yo/compile-function (list src lib))
-          (message (format-message "`%s' compiled" basename))))))
+          (apply rc/compile-function (list src lib))
+          (message (format-message "`%s' compiled" basename)))))))
 
-(defun yo/load-config ()
+(defun rc/load-config (basenames)
   "Load configuration files."
   (interactive)
-  (dolist (basename yo/config-basenames)
-    (let ((lib (concat yo/emacsdir basename ".el" yo/compile-suffix)))
-      (apply yo/load-function (list lib)))))
+  (dolist (basename basenames)
+    (let ((lib (concat rc/emacsdir basename ".el" rc/compile-suffix)))
+      (apply rc/load-function (list lib)))))

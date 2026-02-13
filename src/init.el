@@ -1,31 +1,15 @@
 ;;; -*- lexical-binding: t -*-
 
-;; (require 'package)
-;; (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(require 'package)
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/") t)
 
-;; (defvar yo/config-basenames
-;;   '("org"
-;;     "faces"
-;;     "vc"
-;;     "lisp")
-;;   "Basenames of my configuration files, without `-init' suffix.
-;; Order matters.")
+(rc/compile-update rc/config-paths)
+(rc/load rc/config-paths)
 
-;; (load (concat user-emacs-directory "bootstrap"))
-;; (declare-function yo/bootstrap-config-lib nil)
-;; (declare-function yo/load-config nil)
-
-;; (yo/bootstrap-config-lib)
-;; (yo/load-config)
-
-;; (use-package modus-themes
-;;   :defer t
-;;   :config
-;;   (setq modus-themes-common-palette-overrides
-;;         modus-themes-preset-overrides-intense)
-;;   :custom
-;;   (modus-themes-italic-constructs t)
-;;   (modus-themes-bold-constructs t))
+(message (concat "%f seconds total")
+         (float-time (time-subtract (current-time)
+                                    before-init-time)))
 
 ;; (use-package use-package
 ;;   :custom

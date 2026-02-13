@@ -1,5 +1,7 @@
 ;; -*- lexical-binding: t; -*-
 
+(eval-when-compile (require 'cl-lib))
+
 (defmacro rc/report-evaluation-time (message &rest body)
   (let ((msgsym (gensym))
         (timesym (gensym))
@@ -15,54 +17,31 @@
        ,returnsym)))
 
 (defconst rc/emacsdir
-  (eval-when-compile
-    (expand-file-name user-emacs-directory))
-  "Emacs directory absolute path.")
+  (expand-file-name user-emacs-directory))
 
-(define-inline rc/--expand-config-path (basename)
-  (inline-letevals (basename
-                    (emacsdir (inline-const-val rc/emacsdir)))
-    (inline-quote (concat ,emacsdir ,basename))))
+(defun rc/--expand-config-paths (basenames)
+  (cl-loop for basename in basenames
+           collect (concat rc/emacsdir basename)))
 
 (defconst rc/config-paths
-  (eval-when-compile
-    (mapcar
-     #'rc/--expand-config-path
-     '("themes"))))
+  (rc/--expand-config-paths
+   '("minibuffer")))
 
 (defconst rc/early-config-paths
-  (eval-when-compile
-    (mapcar
-     #'rc/--expand-config-path
-     '("faces"))))
+  (rc/--expand-config-paths
+   '("faces"
+     "themes")))
 
-(defconst rc/--bootstrap-path
-  (eval-when-compile (rc/--expand-config-path "bootstrap")))
-(defconst rc/--bootstrap-src
-  (eval-when-compile (concat rc/--bootstrap-path ".el")))
-(defconst rc/--bootstrap-src-expanded
-  (eval-when-compile (expand-file-name rc/--bootstrap-src)))
-(defconst rc/--bootstrap-byte-comp-target
-  (eval-when-compile (concat rc/--bootstrap-path ".elc")))
-(defconst rc/--bootstrap-native-comp-target
-  (eval-when-compile (concat rc/--bootstrap-path ".eln")))
+(defconst rc/bootstrap-paths
+  (rc/--expand-config-paths
+   '("bootstrap"
+     "real-early-init")))
 
-(defconst rc/--early-init-path
-  (eval-when-compile (rc/--expand-config-path "real-early-init")))
-(defconst rc/--early-init-src
-  (eval-when-compile (concat rc/--early-init-path ".el")))
-(defconst rc/--early-init-src-expanded
-  (eval-when-compile (expand-file-name rc/--early-init-src)))
-(defconst rc/--early-init-byte-comp-target
-  (eval-when-compile (concat rc/--early-init-path ".elc")))
-(defconst rc/--early-init-native-comp-target
-  (eval-when-compile (concat rc/--early-init-path ".eln")))
-
-(define-inline rc/--byte-compile-file (src native-comp-target)
+(defun rc/--byte-compile-file (src native-comp-target)
   (byte-compile-file src)
   (ignore native-comp-target))
 
-(defsubst rc/--byte-and-native-compile-file (src native-comp-target)
+(defun rc/--byte-and-native-compile-file (src native-comp-target)
   (byte-compile-file src)
   (native-compile src native-comp-target))
 
@@ -72,42 +51,6 @@
         #'rc/--byte-and-native-compile-file
       #'rc/--byte-compile-file)))
 
-(defun rc/bootstrap-compile-anyway ()
-  (funcall rc/--compile-file-function
-           rc/--bootstrap-src
-           rc/--bootstrap-native-comp-target))
-
-(defsubst rc/bootstrap-compile-update ()
-  (let ((src-mod-time
-         (file-attribute-modification-time
-          (file-attributes rc/--bootstrap-src-expanded)))
-        (byte-mod-time
-         (file-attribute-modification-time
-          (file-attributes rc/--bootstrap-byte-comp-target))))
-    (unless (and (file-exists-p rc/--bootstrap-byte-comp-target)
-                 (time-less-p src-mod-time byte-mod-time))
-      (funcall rc/--compile-file-function
-               rc/--bootstrap-src
-               rc/--bootstrap-native-comp-target))))
-
-(defun rc/early-init-compile-anyway ()
-  (funcall rc/--compile-file-function
-           rc/--early-init-src
-           rc/--early-init-native-comp-target))
-
-(defsubst rc/early-init-compile-update ()
-  (let ((src-mod-time
-         (file-attribute-modification-time
-          (file-attributes rc/--early-init-src-expanded)))
-        (byte-mod-time
-         (file-attribute-modification-time
-          (file-attributes rc/--early-init-byte-comp-target))))
-    (unless (and (file-exists-p rc/--early-init-byte-comp-target)
-                 (time-less-p src-mod-time byte-mod-time))
-      (funcall rc/--compile-file-function
-               rc/--early-init-src
-               rc/--early-init-native-comp-target))))
-
 (defun rc/compile-anyway (paths)
   (dolist (path paths)
     (let ((src (concat path ".el"))
@@ -115,7 +58,7 @@
       (funcall rc/--compile-file-function
                src native-comp-target))))
 
-(defsubst rc/compile-update (paths)
+(defun rc/compile-update (paths)
   (dolist (path paths)
     (let* ((src (concat path ".el"))
            (byte-comp-target (concat path ".elc"))
@@ -129,13 +72,12 @@
         (byte-compile-file src)
         (native-compile src native-comp-target)))))
 
-(defsubst rc/load (paths)
+(defun rc/load (paths)
   (dolist (path paths)
     (load path)))
 
 (defun rc/all-compile-anyway ()
   (interactive)
-  (rc/bootstrap-compile-anyway)
-  (rc/early-init-compile-anyway)
+  (rc/compile-anyway rc/bootstrap-paths)
   (rc/compile-anyway rc/early-config-paths)
-  (rc/compile-anyway rc/early-config-paths))
+  (rc/compile-anyway rc/config-paths))

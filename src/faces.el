@@ -51,10 +51,7 @@
   (let* ((monitor (alist-get 'name (frame-monitor-attributes frame)))
          (monitor-config (alist-get monitor rc/monitor-face-specs
                                     nil nil #'equal)))
-    (rc/set-face-attributes monitor-config frame)
-    (message (concat "yo nigga "
-                     (prin1-to-string
-                      monitor-config)))))
+    (rc/set-face-attributes monitor-config frame)))
 
 (defvar rc/--frame-created-mutex
   (make-mutex))

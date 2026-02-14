@@ -1,18 +1,14 @@
 ;; -*- lexical-binding: t; -*-
 
-(load (concat user-emacs-directory "real-early-init"))
+(defconst rc/lisp-directory
+  (directory-file-name
+   (expand-file-name
+    (concat user-emacs-directory "rc-lisp"))))
 
-;;   (custom-file (concat user-emacs-directory "custom.el"))
-;;   (use-dialog-box nil)
-;;   (inhibit-startup-screen t)
-;;   (initial-buffer-choice nil)
-;;   (initial-major-mode 'fundamental-mode)
+(defun rc/recompile ()
+  (interactive)
+  (byte-recompile-directory rc/lisp-directory 0 nil t))
 
-;;   (savehist-mode t)
-;;   (global-auto-revert-mode t)
-;;   (indent-tabs-mode nil)
+(push rc/lisp-directory load-path)
 
-;;   (fill-column 80)
-
-;;   (default-input-method "russian-computer")
-;;   (auto-save-visited-mode t)
+(require 'early-init_rc)

@@ -17,4 +17,7 @@
   :ensure t
   :config
   (setq completion-styles '(orderless basic)
-        completion-category-overrides '((file (styles basic partial-completion)))))
+        completion-category-overrides
+	'((file (styles basic partial-completion)))))
+
+(provide 'minibuffer_rc)

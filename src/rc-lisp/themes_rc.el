@@ -13,3 +13,5 @@
  modus-themes-bold-constructs t)
 
 (load-theme 'modus-operandi)
+
+(provide 'themes_rc)

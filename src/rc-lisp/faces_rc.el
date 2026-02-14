@@ -1,5 +1,8 @@
 ;; -*- lexical-binding: t; -*-
 
+(defun rc/wewewe ()
+  (message "yo"))
+
 (defvar rc/default-face-specs
   '((pgtk
      (default :family "IBM Plex Mono")
@@ -113,3 +116,5 @@
      :command (split-string-shell-command cmdstr)
      :connection-type 'pipe
      :filter filter-new)))
+
+(provide 'faces_rc)

@@ -4,3 +4,5 @@
   :defer t
   :ensure t
   :pin "melpa")
+
+(provide 'vc_rc)

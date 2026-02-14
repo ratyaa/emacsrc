@@ -4,27 +4,23 @@
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
 
-(rc/compile-update rc/config-paths)
-(rc/load rc/config-paths)
+(eval-when-compile
+  (require 'macro_rc))
 
-(message (concat "%f seconds total")
+(setq use-package-always-pin "gnu")
+
+(rc/require "minibuffer"
+	    "themes"
+	    "binds"
+	    "consult"
+	    "vc")
+
+(message (concat "%f seconds total") 
          (float-time (time-subtract (current-time)
                                     before-init-time)))
 
-;; (use-package use-package
-;;   :custom
-;;   (use-package-always-pin "gnu"))
-
 ;; (use-package emacs
 ;;   :bind (("C-z" . nil)
-
-;;          ("C-h" . delete-backward-char)
-
-;;          ("C-+" . text-scale-increase)
-;;          ("C--" . text-scale-decrease)
-
-;;          ("C-c h" . help-command))
-
 ;;   :custom
 ;;   (custom-file (concat user-emacs-directory "custom.el"))
 
@@ -73,33 +69,6 @@
 ;;   :config
 ;;   (keymap-set emacs-lisp-mode-map "M-q"
 ;; 	      #'lisp-fill-paragraph))
-
-;; (use-package vertico
-;;   :ensure t
-;;   :init
-;;   (setq vertico-count 20)
-;;   (vertico-mode))
-
-;; (use-package marginalia
-;;   :ensure t
-;;   :init
-;;   (keymap-set minibuffer-local-map "M-a"
-;; 	      #'marginalia-cycle)
-;;   (marginalia-mode))
-
-;; (use-package orderless
-;;   :ensure t
-;;   :custom
-;;   (completion-styles '(orderless basic))
-;;   (completion-category-overrides '((file (styles basic partial-completion)))))
-
-;; (use-package consult
-;;   :ensure t
-;;   :bind
-;;   (("C-c c i" . consult-info)
-;;    ("C-c c m" . consult-man))
-;;   :custom
-;;   (consult-async-refresh-delay 0))
 
 ;; (use-package nix-mode
 ;;   :ensure t

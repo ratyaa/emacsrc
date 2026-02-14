@@ -1,8 +1,5 @@
 ;; -*- lexical-binding: t; -*-
 
-(defun rc/wewewe ()
-  (message "yo"))
-
 (defvar rc/default-face-specs
   '((pgtk
      (default :family "IBM Plex Mono")
@@ -35,12 +32,12 @@
 (defvar rc/monitor-face-specs
   `(("ZQE-CBA" .
      ((pgtk
-       (default :font ,(font-spec :size 18))
-       (line-number :font ,(font-spec :size 17)))))
+       (default :height 108)
+       (line-number :height 102))))
     ("0x092F" .
      ((pgtk
-       (default :font ,(font-spec :size 18))
-       (line-number :font ,(font-spec :size 17)))))))
+       (default :height 108)
+       (line-number :height 102))))))
 
 (defun rc/set-face-attributes (spec-config &optional frame)
   (let* ((terminal-type (terminal-live-p (frame-terminal frame)))

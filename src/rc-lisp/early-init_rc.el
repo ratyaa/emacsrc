@@ -5,6 +5,15 @@
 
 (rc/require "faces")
 
+(setq gc-cons-threshold most-positive-fixnum
+      gc-cons-percentage 0.5)
+
+(defun rc/startup ()
+  (setq gc-cons-threshold 800000
+	gc-cons-percentage 0.1))
+
+(add-hook 'emacs-startup-hook #'rc/startup)
+
 (defun rc/after-init ()
   (rc/set-face-attributes rc/default-face-specs)
   (rc/--frame-set-face-attributes)
@@ -23,9 +32,15 @@
       default-frame-alist
       '((left-fringe . 12)
         (right-fringe . 0))
-      
-      scroll-bar-mode nil
-      menu-bar-mode nil
-      tool-bar-mode nil)
+      inhibit-startup-screen t
+      inhibit-x-resources t
+      initial-scratch-message nil)
+
+(put 'inhibit-startup-echo-area-message 'saved-value
+     (setq inhibit-startup-echo-area-message (user-login-name)))
+
+(scroll-bar-mode -1)
+(menu-bar-mode -1)
+(tool-bar-mode -1)
 
 (provide 'early-init_rc)
